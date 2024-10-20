@@ -40,7 +40,7 @@ public:
   void read_events(const std::string &filename);
 
   // Method to get all events for a specific timestamp
-  const std::vector<Event> get_events_at_timestamp(int timestamp) const;
+  std::vector<Event> get_events_at_timestamp(int timestamp) const;
 
   // Get total timesteps
   int get_total_timesteps() const { return total_timesteps; }
