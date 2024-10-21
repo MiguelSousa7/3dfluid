@@ -53,23 +53,22 @@ void set_bnd(int M, int N, int O, int b, float *x) {
                                     x[IX(M + 1, N + 1, 1)]);
 }
 
-void lin_solve(int M, int N, int O, int b, float *x, float *x0, float a, float c) {
-  int blockSize = 16;  // example tile size
-  for (int l = 0; l < LINEARSOLVERTIMES; l++) {  // Declare l inside the loop
-      for (int i = 1; i <= M; i += blockSize) {  // Declare i inside the loop
-          for (int j = 1; j <= N; j += blockSize) {  // Declare j inside the loop
-              for (int k = 1; k <= O; k += blockSize) {  // Declare k inside the loop
-                  for (int ii = i; ii < i + blockSize && ii <= M; ii++) {  // Declare ii inside the loop
-                      for (int jj = j; jj < j + blockSize && jj <= N; jj++) {  // Declare jj inside the loop
-                          for (int kk = k; kk < k + blockSize && kk <= O; kk++) {  // Declare kk inside the loop
-                              x[IX(ii, jj, kk)] = (x0[IX(ii, jj, kk)] + a * (x[IX(ii-1, jj, kk)] + x[IX(ii+1, jj, kk)] + x[IX(ii, jj-1, kk)] + x[IX(ii, jj+1, kk)] + x[IX(ii, jj, kk-1)] + x[IX(ii, jj, kk+1)])) / c;
-                          }
-                      }
-                  }
-              }
-          }
+// Linear solve for implicit methods (diffusion)
+void lin_solve(int M, int N, int O, int b, float *x, float *x0, float a,
+               float c) {
+  for (int l = 0; l < LINEARSOLVERTIMES; l++) {
+    for (int i = 1; i <= M; i++) {
+      for (int j = 1; j <= N; j++) {
+        for (int k = 1; k <= O; k++) {
+          x[IX(i, j, k)] = (x0[IX(i, j, k)] +
+                            a * (x[IX(i - 1, j, k)] + x[IX(i + 1, j, k)] +
+                                 x[IX(i, j - 1, k)] + x[IX(i, j + 1, k)] +
+                                 x[IX(i, j, k - 1)] + x[IX(i, j, k + 1)])) /
+                           c;
+        }
       }
-      set_bnd(M, N, O, b, x); 
+    }
+    set_bnd(M, N, O, b, x);
   }
 }
 
