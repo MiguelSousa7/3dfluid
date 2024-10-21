@@ -1,6 +1,4 @@
-CPP = g++ -Wall -pg -march=native -mtune=native -Ofast -fprefetch-loop-arrays -ffast-math \
-      -funroll-loops -flto -fprefetch-loop-arrays -floop-block -floop-interchange
-
+CPP = g++ -Wall 
 SRCS = main.cpp fluid_solver.cpp EventManager.cpp
 
 all:
@@ -8,7 +6,5 @@ all:
 
 clean:
 	@echo Cleaning up...
-	@rm -f fluid_sim  
+	@rm fluid
 	@echo Done.
-
-
